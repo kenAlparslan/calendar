@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DayCollectionViewCell" id="gTV-IL-0wX" customClass="DayCollectionViewCell" customModule="calender" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="400" height="200"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="400" height="200"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sKw-eD-9jd">
+                        <rect key="frame" x="0.0" y="0.0" width="400" height="200"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FRIDAY 23 " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gq8-8Q-hhH">
+                                <rect key="frame" x="5" y="0.0" width="103.5" height="24"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="R2I-ZG-dOo"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="15" id="cdp-6s-8TX"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.zPosition">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5ls-ul-cPm">
+                                <rect key="frame" x="0.0" y="0.0" width="400" height="200"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Gq8-8Q-hhH" firstAttribute="leading" secondItem="sKw-eD-9jd" secondAttribute="leading" constant="5" id="3Wl-17-9g2"/>
+                            <constraint firstAttribute="trailing" secondItem="5ls-ul-cPm" secondAttribute="trailing" id="8fm-v9-6Hw"/>
+                            <constraint firstItem="Gq8-8Q-hhH" firstAttribute="top" secondItem="sKw-eD-9jd" secondAttribute="top" id="RHy-KY-bMQ"/>
+                            <constraint firstAttribute="bottom" secondItem="5ls-ul-cPm" secondAttribute="bottom" id="T6F-3G-VV4"/>
+                            <constraint firstItem="5ls-ul-cPm" firstAttribute="top" secondItem="sKw-eD-9jd" secondAttribute="top" id="Xdy-V7-27a"/>
+                            <constraint firstItem="5ls-ul-cPm" firstAttribute="leading" secondItem="sKw-eD-9jd" secondAttribute="leading" id="aDj-iU-R1j"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="sKw-eD-9jd" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="QU9-IH-Phy"/>
+                <constraint firstAttribute="bottom" secondItem="sKw-eD-9jd" secondAttribute="bottom" id="VGf-xa-O8x"/>
+                <constraint firstAttribute="trailing" secondItem="sKw-eD-9jd" secondAttribute="trailing" id="nyX-mX-89c"/>
+                <constraint firstItem="sKw-eD-9jd" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="sdM-hc-YB8"/>
+            </constraints>
+            <size key="customSize" width="377" height="185"/>
+            <connections>
+                <outlet property="container" destination="sKw-eD-9jd" id="65w-Ig-eDa"/>
+                <outlet property="dayLbl" destination="Gq8-8Q-hhH" id="6bl-FW-SV8"/>
+                <outlet property="petImageView" destination="5ls-ul-cPm" id="66I-tN-Z6i"/>
+            </connections>
+            <point key="canvasLocation" x="-113.768115942029" y="118.19196428571428"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
