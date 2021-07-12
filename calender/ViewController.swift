@@ -44,6 +44,11 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         print(currentDay)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        reachability.stopNotifier()
+        NotificationCenter.default.removeObserver(self, name: .reachabilityChanged, object: reachability)
+    }
+    
     @objc func reachabilityChanged(note: Notification) {
 
       let reachability = note.object as! Reachability
