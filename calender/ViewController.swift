@@ -42,11 +42,27 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         didRequest = true
         currentWeek = week()
         print(currentDay)
+//        NotificationCenter.default.addObserver(self, selector: #selector(rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         reachability.stopNotifier()
         NotificationCenter.default.removeObserver(self, name: .reachabilityChanged, object: reachability)
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+    
+    @objc func rotated(){
+        guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+            return
+        }
+        flowLayout.invalidateLayout()
+        collectionView.reloadData()
     }
     
     @objc func reachabilityChanged(note: Notification) {
@@ -98,7 +114,18 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: self.collectionView.frame.height/3)
+        if #available(iOS 11.0, *) {
+            if UIDevice.current.orientation.isLandscape {
+                return CGSize(width: view.safeAreaLayoutGuide.layoutFrame.width, height: self.collectionView.frame.height - 20)
+            }
+            return CGSize(width: view.safeAreaLayoutGuide.layoutFrame.width, height: self.collectionView.frame.height/3)
+        } else {
+            if UIDevice.current.orientation.isLandscape {
+                return CGSize(width: view.safeAreaLayoutGuide.layoutFrame.width, height: self.collectionView.frame.height - 20)
+            }
+            return CGSize(width: view.frame.width, height: self.collectionView.frame.height/3)
+        }
+//        return CGSize(width: collectionView.frame.width, height: self.collectionView.frame.height/3)
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
