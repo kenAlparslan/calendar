@@ -14,6 +14,7 @@ class ImageManager {
     let url = URL(string: "https://api.thedogapi.com/v1/images/search?limit=7")! // https://api.thedogapi.com/v1/images/search
     var images: [URL] = []
     let subject = PublishSubject<Bool>()
+    var parsingError: Bool = false
 
     func observeDownloadProcess() -> Observable<Bool> {
         return subject.asObservable()
@@ -33,15 +34,13 @@ class ImageManager {
                             self.images.append(url)
                         } else {
                             print("error parsing the data")
+                            self.parsingError = true
+                            break
                         }
                     }
                 }
             }
-
-            for i in 0..<self.images.count {
-                print(self.images[i])
-            }
-            if error == nil {
+            if error == nil && self.parsingError == false {
                 self.notifyObservers(success: true)
             } else {
                 print("Error occured while downloading images")

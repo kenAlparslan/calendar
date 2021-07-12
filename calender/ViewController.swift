@@ -23,7 +23,6 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         super.viewDidLoad()
         self.collectionView.register(UINib(nibName: String(describing: DayCollectionViewCell.self), bundle: nil), forCellWithReuseIdentifier: String(describing: DayCollectionViewCell.self))
         currentDay = dayIndex <= 1 ? 6 : dayIndex - 2
-        print("Requesting an image")
         startAnimation()
         imageManager.subject.subscribe(onNext: { status in
             if (status) {
@@ -38,11 +37,10 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         }catch{
           print("could not start reachability notifier")
         }
+        print("Requesting an image")
         imageManager.requestImages()
         didRequest = true
         currentWeek = week()
-        print(currentDay)
-//        NotificationCenter.default.addObserver(self, selector: #selector(rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -52,11 +50,13 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        // remove observers
         reachability.stopNotifier()
         NotificationCenter.default.removeObserver(self, name: .reachabilityChanged, object: reachability)
         NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
+    // handle orientation changes
     @objc func rotated(){
         guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
             return
@@ -65,10 +65,9 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         collectionView.reloadData()
     }
     
+    // Detect Wifi connection and request imagaes again (i.e. if app launched with wifi off)
     @objc func reachabilityChanged(note: Notification) {
-
       let reachability = note.object as! Reachability
-
       switch reachability.connection {
       case .wifi:
           print("Reachable via WiFi")
@@ -76,15 +75,12 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
             imageManager.requestImages()
             didRequest = true
         }
-      case .cellular:
-          print("Reachable via Cellular")
-      case .unavailable:
-        print("Network not reachable")
       default:
-        print("  ")
+        break
       }
     }
     
+    // Update UI when images are downloaded
     func updateUI() {
         if animationTimer != nil {
             animationTimer?.invalidate()
@@ -96,6 +92,7 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         }
     }
     
+    // Displays animation until we download the images otherwise shows calendar without the images after 3 seconds (Slow network conditions)
     func startAnimation() {
         self.collectionView.showBlurLoader()
         animationTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false, block: { timer in
@@ -105,6 +102,23 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         })
     }
     
+    // get the current calendar week
+    func week() -> [Date] {
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.firstWeekday = 2 // Start on Monday (or 1 for Sunday)
+        let today = calendar.startOfDay(for: Date())
+        var week = [Date]()
+        if let weekInterval = calendar.dateInterval(of: .weekOfYear, for: today) {
+            for i in 0...6 {
+                if let day = calendar.date(byAdding: .day, value: i, to: weekInterval.start) {
+                    week += [day]
+                }
+            }
+        }
+        return week
+    }
+    
+    // MARK: CollectionView functions
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -125,13 +139,12 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
             }
             return CGSize(width: view.frame.width, height: self.collectionView.frame.height/3)
         }
-//        return CGSize(width: collectionView.frame.width, height: self.collectionView.frame.height/3)
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: DayCollectionViewCell.self), for: indexPath) as? DayCollectionViewCell else { return UICollectionViewCell() }
         cell.dayLbl.text = currentWeek[indexPath.row].dayOfWeek()
-        if self.imageManager.images.count > 0 {
+        if self.imageManager.images.count == 7 {
             if let data = try? Data(contentsOf: self.imageManager.images[indexPath.row]) {
                 cell.petImageView.image = UIImage(data: data)?.imageResized(to: cell.frame.size)
                 cell.petImageView.backgroundColor = .clear
@@ -145,21 +158,6 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
             cell.dayLbl.textColor = UIColor.white
         }
         return cell
-    }
-    
-    func week() -> [Date] {
-        var calendar = Calendar.autoupdatingCurrent
-        calendar.firstWeekday = 2 // Start on Monday (or 1 for Sunday)
-        let today = calendar.startOfDay(for: Date())
-        var week = [Date]()
-        if let weekInterval = calendar.dateInterval(of: .weekOfYear, for: today) {
-            for i in 0...6 {
-                if let day = calendar.date(byAdding: .day, value: i, to: weekInterval.start) {
-                    week += [day]
-                }
-            }
-        }
-        return week
     }
 }
 
